@@ -21,6 +21,17 @@ def cosBell_0_05(x):
     "cosBell initial conditions with a=0, x=0.5"
     return cosBell(x, 0, 0.5)
 
+def square_wave(x, a, b):
+    '''
+    Returns a square wave between parameters a and b
+    Parameters:
+        a (float): The start of the square wave
+        b (float): The end of the square wave
+    Returns:
+        phi : 1darray. A square wave between x=a and x=b
+    '''
+    return np.where((x > a) & (x < b), 1, 0.)
+
 def l2error(phi, phiA):
     '''
     Returns the l2 error norm of phi in comparison to exact solution phiA.

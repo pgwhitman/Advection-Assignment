@@ -6,7 +6,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from advectionHelpers import cosBell_0_05
+from advectionHelpers import cosBell_0_05, cosBell, square_wave
 from schemesBasic import FTBS, CTCS, FTCS
 
 # First make sure that the plots folder exists
@@ -46,11 +46,12 @@ def compareSchemeSnapshots(init, schemes, outFile,
     phi0 = init(x)
     
     # Colours for each line
-    cols = ['blue', 'red', 'green', 'cyan', 'magenta', 'brown', 'purple',
-            'pink', 'orange', 'gray', 'orange']
+    cols = ['blue', 'orange', 'green', 'cyan', 'magenta', 'brown', 'purple',
+            'pink', 'red', 'gray']
     
     # Find and plot the analytic solution
     phiA = init((x - u*endTime)%(xLim[1] - xLim[0]))
+    plt.figure()
     plt.plot(x, phiA, 'k', label = "Analytic", linewidth=2)
     
     # Calculate the results of all of the schemes and plot
@@ -65,13 +66,18 @@ def compareSchemeSnapshots(init, schemes, outFile,
     
     plt.xlim(xLim)
     plt.ylim(yLim)
-    plt.xlabel('x')
-    plt.ylabel(r'$\phi$')
-    plt.legend()
+    plt.xlabel('x', fontsize=15)
+    plt.ylabel(r'$\phi$', fontsize=15)
+    plt.legend(fontsize=13)
     plt.savefig("plots/"+outFile)
 
 # List of functions to do the advection
 schemes = [FTBS, CTCS, FTCS]
 
-compareSchemeSnapshots(cosBell_0_05, schemes, "basicSchemesCos.pdf",
+#Basic Scheme Comparison Plots
+compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "basicSchemesCos.pdf",
                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+
+compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "basicSchemesSquare.pdf",
+                       nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+

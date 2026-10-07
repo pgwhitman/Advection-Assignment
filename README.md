@@ -14,7 +14,7 @@ Requires python 3.14.7
 
 Requirements in requirement.txt
 
-If dependencies required, run: 
+If dependencies required, run:
 
 python -m venv .venv
 
