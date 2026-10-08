@@ -6,8 +6,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from advectionHelpers import cosBell_0_05, cosBell, square_wave
-from schemesBasic import FTBS, CTCS, FTCS
+from advectionHelpers import cosBell, square_wave
+from schemesBasic import FTBS, CTCS, FTCS, semi_lagrange
 
 # First make sure that the plots folder exists
 if not os.path.exists("plots"):
@@ -72,12 +72,29 @@ def compareSchemeSnapshots(init, schemes, outFile,
     plt.savefig("plots/"+outFile)
 
 # List of functions to do the advection
-schemes = [FTBS, CTCS, FTCS]
+basic_schemes = [FTBS, CTCS, FTCS]
+
+new_schemes = [FTBS, CTCS, semi_lagrange]
 
 #Basic Scheme Comparison Plots
-compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "basicSchemesCos.pdf",
-                       nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
 
-compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "basicSchemesSquare.pdf",
-                       nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+# compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), basic_schemes, "basicSchemesCos.pdf",
+#                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+
+# compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), basic_schemes, "basicSchemesSquare.pdf",
+#                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+
+# compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCos.pdf",
+#                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+
+# compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), new_schemes, "newSchemesSquare.pdf",
+#                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
+
+compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesCos.pdf",
+                       nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
+
+compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesSquare.pdf",
+                       nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
+
+
 

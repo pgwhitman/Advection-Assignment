@@ -94,3 +94,34 @@ def CTCS(phiLevels, c):
     # Remove the old value of phi
     phiLevels.pop(0)
     return None
+
+def semi_lagrange(phiLevels, c):
+    '''
+    Solves the linear advection equation for one time step using a Semi-Lagrangian method.
+    Cubic Lagrange interpolation is used. phiLevels is updated. Nothing is returned.
+    Parameters:
+        phiLevels ([1darray,1darray]): A list of two consecutive values of phi.
+                   If only one is present, the next is created using FTCS.
+        c (float): The Courant number
+    Returns:
+        None
+    '''
+
+    phiLevels.append(phiLevels[-1].copy())
+    # Labels for phi at time levels n and n+1
+    phiOld = phiLevels[0]
+    phiNew = phiLevels[1]
+    
+    # Update phi for all points
+    nx = len(phiOld)
+    for i in range(nx):
+        k = int((np.floor(i - c)))
+        b = i - k - c
+        phiNew[i] = -1/6 * b * (1-b) * (2-b) * phiOld[(k-1)%nx] + \
+                     1/2 * (1+b) * (1-b) * (2-b) * phiOld[(k%nx)] + \
+                     1/2 * (1+b) * b * (2-b) * phiOld[(k+1)%nx] - \
+                     1/6 * (1+b) * b * (1-b) * phiOld[(k+2)%nx]
+    # Remove the old value of phi
+    phiLevels.pop(0)
+
+    return None

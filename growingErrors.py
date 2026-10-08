@@ -6,8 +6,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from advectionHelpers import cosBell_0_05, l2error
-from schemesBasic import FTBS, CTCS, FTCS
+from advectionHelpers import cosBell_0_05, cosBell, square_wave, l2error
+from schemesBasic import FTBS, CTCS, FTCS, semi_lagrange
 
 # First make sure that the plots folder exists
 if not os.path.exists("plots"):
@@ -48,9 +48,9 @@ def growingErrors(init, schemes, outFile,
     times = np.linspace(0, endTime, nt+1)
     
     # Colours for each line
-    cols = ['blue', 'red', 'green', 'cyan', 'magenta', 'brown', 'purple',
-            'pink', 'orange', 'gray', 'orange']
-    
+    cols = ['blue', 'orange', 'green', 'cyan', 'magenta', 'brown', 'purple',
+            'pink', 'red', 'gray', 'orange']
+    plt.figure()
     # Loop over all the schemes and plot
     for i in range(len(schemes)):
         # The l2 error for each time step
@@ -68,15 +68,24 @@ def growingErrors(init, schemes, outFile,
 
         # Plot the error for this scheme
         plt.semilogy(times, l2errors, cols[i], label = schemes[i].__name__)
-    
+
     plt.xlim([0, endTime])
     plt.ylim(yLim)
-    plt.legend()
-    plt.xlabel('Time')
-    plt.ylabel(r'$\ell_2$ error')
+    plt.legend(fontsize=15)
+    plt.xlabel('Time', fontsize=13)
+    plt.ylabel(r'$\ell_2$ error', fontsize=13)
     plt.savefig("plots/"+outFile)
 
-schemes = [FTBS, CTCS, FTCS]
+schemes = [FTBS, CTCS, semi_lagrange]
 
-growingErrors(cosBell_0_05, schemes, "basicSchemesCosErrors.pdf",
-              nx = 40, nt = 100, u = 1, endTime = 1)
+# growingErrors(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "basicSchemesCosErrors.pdf",
+#               nx = 40, nt = 100, u = 1, endTime = 1)
+
+# growingErrors(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "basicSchemesSquareErrors.pdf",
+#               nx = 40, nt = 100, u = 1, endTime = 1)
+
+growingErrors(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "newSchemesCosErrors.pdf",
+              nx = 40, nt = 100, u = 2.8, endTime = 1)
+
+growingErrors(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "newSchemesSquareErrors.pdf",
+              nx = 40, nt = 100, u = 2.8, endTime = 1)
