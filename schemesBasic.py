@@ -95,13 +95,12 @@ def CTCS(phiLevels, c):
     phiLevels.pop(0)
     return None
 
-def semi_lagrange(phiLevels, c):
+def Semi_Lagrange(phiLevels, c):
     '''
     Solves the linear advection equation for one time step using a Semi-Lagrangian method.
     Cubic Lagrange interpolation is used. phiLevels is updated. Nothing is returned.
     Parameters:
         phiLevels ([1darray,1darray]): A list of two consecutive values of phi.
-                   If only one is present, the next is created using FTCS.
         c (float): The Courant number
     Returns:
         None

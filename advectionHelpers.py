@@ -21,6 +21,9 @@ def cosBell_0_05(x):
     "cosBell initial conditions with a=0, x=0.5"
     return cosBell(x, 0, 0.5)
 
+def sinwave(x):
+    return np.sin(2 * np.pi * x)
+
 def square_wave(x, a, b):
     '''
     Returns a square wave between parameters a and b

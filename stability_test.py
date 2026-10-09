@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from advectionHelpers import cosBell, l2error
-from schemesBasic import FTBS, CTCS, semi_lagrange
+from schemesBasic import FTBS, CTCS, Semi_Lagrange
 
 def resolutionErrors(init, schemes, outFile,
                            nx, nt = 10, u = 1, endTime = 0.4,
@@ -30,20 +30,20 @@ def resolutionErrors(init, schemes, outFile,
             'pink', 'red', 'gray', 'orange']
 
     # Need to loop over resolutions and schemes  
-    delta_x = np.zeros(len(nx))
-    l2errors = np.zeros((len(nx), len(schemes)))
-    for n in range(len(nx)): #Need to make sure this works with how nx is defined
+    courant = np.zeros(len(u))
+    l2errors = np.zeros((len(u), len(schemes)))
+    for n in range(len(u)): #Need to make sure this works with how nx is defined
         # Derived parameters
-        dx = (xLim[1] - xLim[0])/nx[n]
-        delta_x[n] = dx
+        dx = (xLim[1] - xLim[0])/nx
         x = np.arange(xLim[0], xLim[1], dx)
         dt = endTime/nt
-        c = nx[n]*u*endTime/(nt*(xLim[1] - xLim[0])) # Courant number, dt*u/dx
+        c = nx*u[n]*endTime/(nt*(xLim[1] - xLim[0])) # Courant number, dt*u/dx
+        courant[n] = c       
         print('Courant number =', c)
         # Set the initial conditions for all schemes
         phi0 = init(x)
         # Compute analytic solution at endtime
-        phiA = init((x - u*endTime)%(xLim[1] - xLim[0]))
+        phiA = init((x - u[n]*endTime)%(xLim[1] - xLim[0]))
         for i in range(len(schemes)):
             # The solution for this scheme
             phiLevels = [phi0.copy()]
@@ -57,22 +57,18 @@ def resolutionErrors(init, schemes, outFile,
     # Plot the error for this scheme
     plt.figure()
     for i in range(len(schemes)):
-        plt.loglog(delta_x, l2errors[:, i], cols[i], label = schemes[i].__name__)
-        rate = np.polyfit(np.log(delta_x), np.log(l2errors[:, i]), 1)[0]
-        print(rate)
+        plt.semilogy(courant, l2errors[:, i], cols[i], label = schemes[i].__name__)
     plt.ylim(yLim)
     plt.legend(fontsize=15)
-    plt.xlabel(r'$\Delta x$', fontsize=13)
+    plt.xlabel(r'$c$', fontsize=13)
     plt.ylabel(r'$\ell_2$ error', fontsize=13)
     plt.savefig("plots/"+outFile)
     return None
 
-new_schemes = [FTBS, CTCS, semi_lagrange]
+new_schemes = [FTBS, CTCS, Semi_Lagrange]
 
-#nx = np.array([35, 32, 30, 25, 22, 20, 15, 10])
-nx = (np.arange(1, 200, 1))
-print(nx)
+u = np.arange(0.1, 1.5, 0.05)
 
-resolutionErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosResolutionErrors.pdf",
-                       nx, nt = 20, u = 1, endTime = 0.4, xLim=[0,1])
+resolutionErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosStabilityErrors.pdf",
+                       nx = 100, nt = 50, u = u, endTime = 1.0, xLim=[0,1])
 
