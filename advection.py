@@ -37,6 +37,7 @@ def compareSchemeSnapshots(init, schemes, outFile,
     '''
     # Derived parameters
     dx = (xLim[1] - xLim[0])/nx
+    print(dx)
     x = np.arange(xLim[0], xLim[1], dx)
     dt = endTime/nt
     c = nx*u*endTime/(nt*(xLim[1] - xLim[0])) # Courant number, dt*u/dx
@@ -90,11 +91,13 @@ new_schemes = [FTBS, CTCS, semi_lagrange]
 # compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), new_schemes, "newSchemesSquare.pdf",
 #                        nx = 40, nt = 20, u = 1, endTime = 0.2, xLim = [0,1])
 
-compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesCos.pdf",
-                       nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
+# compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesCos.pdf",
+#                        nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
 
-compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesSquare.pdf",
-                       nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
+# compareSchemeSnapshots(lambda x: square_wave(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesSquare.pdf",
+#                        nx = 40, nt = 20, u = 2.8, endTime = 0.2, xLim = [0,1], yLim=[-0.05, 1.05])
 
+compareSchemeSnapshots(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "c1_12newSchemesCosdemo.pdf",
+                       nx = 50, nt = 20, u = 1, endTime = 0.4, xLim = [0,1], yLim=[-0.05, 1.05])
 
 
