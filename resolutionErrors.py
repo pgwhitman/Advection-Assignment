@@ -1,8 +1,11 @@
+#Description: Create a graph of errors against resolution while keeping the Courant
+# number constant for different linear advection schemes.
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from advectionHelpers import cosBell, l2error, sinwave
-from schemesBasic import FTBS, CTCS, Semi_Lagrange
+from schemes import FTBS, CTCS, Semi_Lagrange
 
 def resolutionErrors(init, schemes, outFile,
                            nx, u = 1, c = 0.5, endTime = 1.0,
@@ -10,11 +13,11 @@ def resolutionErrors(init, schemes, outFile,
     '''
     Function to plot the error at a set time for a set of resolutions
     Parameters:
-        nx (int): The number of points in space
+        nx (array): The number of points in space
         init (callable): Function to set the initial conditions.
         schemes (list of callable): List of functions to evaluate the schemes.
-        nt (int): The number of time steps.
         u (float): The wind speed
+        c (float): Courant number
         endTime (float) : The final time
         outFile (string): The name of the output file.
         xLim (tuple): The maximum and minimun spacial dimensions
@@ -33,15 +36,16 @@ def resolutionErrors(init, schemes, outFile,
     delta_x = np.zeros(len(nx))
     l2errors = np.zeros((len(nx), len(schemes)))
 
-    # Loop over resolutions/spatial steps 
+    # Loop over different resolutions/spatial steps 
     for n in range(len(nx)):
-
         # Derived parameters
         dx = (xLim[1] - xLim[0])/nx[n]
         delta_x[n] = dx
         x = np.arange(xLim[0], xLim[1], dx)
+        #Calculate nt - must take integer values
         nt = round(nx[n]*u*endTime/(c*(xLim[1] - xLim[0])))   
-        c_actual = nx[n]*u*endTime/(nt*(xLim[1] - xLim[0])) #Calculate c_actual - accept a change in c to make sure nt is an integer
+        #Calculate c_actual - accept a change in c to make sure nt is an integer
+        c_actual = nx[n]*u*endTime/(nt*(xLim[1] - xLim[0])) 
         print('Courant number =', c_actual)
 
         # Set the initial conditions for all schemes
@@ -51,7 +55,7 @@ def resolutionErrors(init, schemes, outFile,
 
         #Loop over schemes and store errors
         for i in range(len(schemes)):
-            # The solution for this scheme
+            # #Copt initial conditions
             phiLevels = [phi0.copy()]
             # Loop through all time steps
             for t in range(nt):

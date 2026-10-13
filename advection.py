@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from advectionHelpers import cosBell, square_wave
-from schemesBasic import FTBS, CTCS, FTCS, semi_lagrange
+from schemes import FTBS, CTCS, FTCS, Semi_Lagrange
 
 # First make sure that the plots folder exists
 if not os.path.exists("plots"):
@@ -75,7 +75,7 @@ def compareSchemeSnapshots(init, schemes, outFile,
 # List of functions to do the advection
 basic_schemes = [FTBS, CTCS, FTCS]
 
-new_schemes = [FTBS, CTCS, semi_lagrange]
+new_schemes = [FTBS, CTCS, Semi_Lagrange]
 
 #Basic Scheme Comparison Plots
 

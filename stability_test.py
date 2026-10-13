@@ -1,20 +1,23 @@
+#Description: Creates a graph of error against Courant number for different linear advection schemes
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 from advectionHelpers import cosBell, l2error
-from schemesBasic import FTBS, CTCS, Semi_Lagrange
+from schemes import FTBS, CTCS, Semi_Lagrange
 
-def resolutionErrors(init, schemes, outFile,
+def CourantErrors(init, schemes, outFile,
                            nx, nt = 10, u = 1, endTime = 0.4,
                            xLim = [0,1], yLim = [None,None]):
     '''
     Function to plot the error at a set time for a set of resolutions
     Parameters:
         nx (int): The number of points in space
+        nt (int): The number of timesteps
         init (callable): Function to set the initial conditions.
         schemes (list of callable): List of functions to evaluate the schemes.
         nt (int): The number of time steps.
-        u (float): The wind speed
+        u (array): The wind speed - varied in order to vary courant number
         endTime (float) : The final time
         outFile (string): The name of the output file.
         xLim (tuple): The maximum and minimun spacial dimensions
@@ -69,6 +72,6 @@ new_schemes = [FTBS, CTCS, Semi_Lagrange]
 
 u = np.arange(0.1, 1.5, 0.05)
 
-resolutionErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosStabilityErrors.pdf",
+CourantErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosStabilityErrors.pdf",
                        nx = 100, nt = 50, u = u, endTime = 1.0, xLim=[0,1])
 

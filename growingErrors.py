@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from advectionHelpers import cosBell_0_05, cosBell, square_wave, l2error
-from schemesBasic import FTBS, CTCS, FTCS, semi_lagrange
+from schemes import FTBS, CTCS, FTCS, semi_lagrange
 
 # First make sure that the plots folder exists
 if not os.path.exists("plots"):
