@@ -12,7 +12,7 @@ def cosBell(x, a, b):
         a (float): The start of the non-zero bell
         b (float): The end of the non-zero bell
     Returns:
-        phi : 1darray. A cosine bell shape between x=a and x=b
+        phi (1darray): A cosine bell shape between x=a and x=b
     '''
     return np.where((x > a) & (x < b), 
                     0.5*(1 - np.cos(2*np.pi*(x - a)/(b-a))), 0.)
@@ -21,8 +21,17 @@ def cosBell_0_05(x):
     "cosBell initial conditions with a=0, x=0.5"
     return cosBell(x, 0, 0.5)
 
-def sinwave(x):
-    return np.sin(2 * np.pi * x)
+def sinwave(x, L):
+    '''
+    Returns a singular sine wave over a domain x of length L
+    Parameters:
+        x (1darray): The x-locations for calculating the sin wave
+        L (float): The length of the x-domain
+    Returns:
+        phi (1darray): A single sin wave across the input x-domain
+
+    '''
+    return np.sin(2 * np.pi * x/L)
 
 def square_wave(x, a, b):
     '''

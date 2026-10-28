@@ -100,7 +100,8 @@ def Semi_Lagrange(phiLevels, c):
     Solves the linear advection equation for one time step using a Semi-Lagrangian method.
     Cubic Lagrange interpolation is used. phiLevels is updated. Nothing is returned.
     Parameters:
-        phiLevels ([1darray,1darray]): A list of two consecutive values of phi.
+        phiLevels ([1darray]): A list length one containing a 1darray which is 
+                    the latest value of phi, to be updated.
         c (float): The Courant number
     Returns:
         None
@@ -111,7 +112,7 @@ def Semi_Lagrange(phiLevels, c):
     phiOld = phiLevels[0]
     phiNew = phiLevels[1]
     
-    # Update phi for all points
+    # Update phi for all points using cubic interpolation
     nx = len(phiOld)
     for i in range(nx):
         k = int((np.floor(i - c)))

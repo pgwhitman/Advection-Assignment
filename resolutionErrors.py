@@ -1,5 +1,5 @@
 #Description: Create a graph of errors against resolution while keeping the Courant
-# number constant for different linear advection schemes.
+#number constant for different linear advection schemes.
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,11 +51,11 @@ def resolutionErrors(init, schemes, outFile,
         # Set the initial conditions for all schemes
         phi0 = init(x)
         # Compute analytic solution at endtime
-        phiA = init((x - u*endTime)%(xLim[1] - xLim[0])) #Changing c will not change u - check?
+        phiA = init((x - u*endTime)%(xLim[1] - xLim[0])) 
 
         #Loop over schemes and store errors
         for i in range(len(schemes)):
-            # #Copt initial conditions
+            # Copy initial conditions
             phiLevels = [phi0.copy()]
             # Loop through all time steps
             for t in range(nt):
@@ -78,9 +78,10 @@ def resolutionErrors(init, schemes, outFile,
     return None
 
 
-#Schemes used
+#Schemes used and x-domain
 new_schemes = [FTBS, CTCS, Semi_Lagrange]
+xLim = [0,1]
 
 #Run script
-resolutionErrors(lambda x: sinwave(x), new_schemes, "newSchemesSinResolutionErrors.pdf",
-                       nx = (np.arange(40, 400, 10)), u = 1, c = 0.5, endTime = 1.0, xLim=[0,1])
+resolutionErrors(lambda x: sinwave(x, xLim[1] - xLim[0]), new_schemes, "newSchemesSinResolutionErrors.pdf",
+                       nx = (np.arange(40, 400, 10)), u = 1, c = 0.5, endTime = 1.0, xLim=xLim)

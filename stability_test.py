@@ -32,10 +32,12 @@ def CourantErrors(init, schemes, outFile,
     cols = ['blue', 'orange', 'green', 'cyan', 'magenta', 'brown', 'purple',
             'pink', 'red', 'gray', 'orange']
 
-    # Need to loop over resolutions and schemes  
+    # Initialise arrays
     courant = np.zeros(len(u))
     l2errors = np.zeros((len(u), len(schemes)))
-    for n in range(len(u)): #Need to make sure this works with how nx is defined
+
+    #Loop over Courant numbers/u
+    for n in range(len(u)): 
         # Derived parameters
         dx = (xLim[1] - xLim[0])/nx
         x = np.arange(xLim[0], xLim[1], dx)
@@ -43,10 +45,14 @@ def CourantErrors(init, schemes, outFile,
         c = nx*u[n]*endTime/(nt*(xLim[1] - xLim[0])) # Courant number, dt*u/dx
         courant[n] = c       
         print('Courant number =', c)
+
         # Set the initial conditions for all schemes
         phi0 = init(x)
+
         # Compute analytic solution at endtime
         phiA = init((x - u[n]*endTime)%(xLim[1] - xLim[0]))
+
+        #Loop over schemes
         for i in range(len(schemes)):
             # The solution for this scheme
             phiLevels = [phi0.copy()]
@@ -70,8 +76,8 @@ def CourantErrors(init, schemes, outFile,
 
 new_schemes = [FTBS, CTCS, Semi_Lagrange]
 
-u = np.arange(0.1, 1.5, 0.05)
+u = np.arange(0.15, 1.55, 0.1)
 
-CourantErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosStabilityErrors.pdf",
-                       nx = 100, nt = 50, u = u, endTime = 1.0, xLim=[0,1])
+CourantErrors(lambda x: cosBell(x, a=0.1, b=0.5), new_schemes, "newSchemesCosStabilityErrorstighternonint.pdf",
+                       nx = 100, nt = 50, u = u, endTime = 1.0, xLim=[0,1], yLim=[10e-6,10e12])
 

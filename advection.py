@@ -72,9 +72,8 @@ def compareSchemeSnapshots(init, schemes, outFile,
     plt.legend(fontsize=13)
     plt.savefig("plots/"+outFile)
 
-# List of functions to do the advection
+#Basic and new scheme lists
 basic_schemes = [FTBS, CTCS, FTCS]
-
 new_schemes = [FTBS, CTCS, Semi_Lagrange]
 
 #Basic Scheme Comparison Plots
