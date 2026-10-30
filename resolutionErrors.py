@@ -8,25 +8,31 @@ from advectionHelpers import cosBell, l2error, sinwave
 from schemes import FTBS, CTCS, Semi_Lagrange
 
 def resolutionErrors(init, schemes, outFile,
-                           nx, u = 1, c = 0.5, endTime = 1.0,
-                           xLim = [0,1], yLim = [None,None]):
+                           nx, yLim = [None,None]):
     '''
-    Function to plot the error at a set time for a set of resolutions
+    Function to plot the error at endTime for a set of resolutions for a courant number of 0.5
+    Values of c, endTime and xLim are chosen to take fixed values such that nt = 2*nx  and hence 
+    nt will always take integer values for integer nx, ensuring the endTime and Courant number can 
+    remain fixed for any value of nx.
     Parameters:
         nx (array): The number of points in space
         init (callable): Function to set the initial conditions.
         schemes (list of callable): List of functions to evaluate the schemes.
-        u (float): The wind speed
         c (float): Courant number
-        endTime (float) : The final time
         outFile (string): The name of the output file.
-        xLim (tuple): The maximum and minimun spacial dimensions
         yLim (tuple): The minimum (yLim[0]) and maximum (yLim[1]) y values of
                       the graph. If None is specified then default limits
                       are used.
     Returns:
         None
     ''' 
+
+    #Constant Parameters
+    u = 1
+    endTime = 1.0
+    c = 0.5
+    xLim = [0, 1]
+    L = xLim[1] - xLim[0]
 
     # Colours for each line
     cols = ['blue', 'orange', 'green', 'cyan', 'magenta', 'brown', 'purple',
@@ -43,15 +49,17 @@ def resolutionErrors(init, schemes, outFile,
         delta_x[n] = dx
         x = np.arange(xLim[0], xLim[1], dx)
         #Calculate nt - must take integer values
-        nt = round(nx[n]*u*endTime/(c*(xLim[1] - xLim[0])))   
-        #Calculate c_actual - accept a change in c to make sure nt is an integer
-        c_actual = nx[n]*u*endTime/(nt*(xLim[1] - xLim[0])) 
-        print('Courant number =', c_actual)
+        nt = nx[n]*u*endTime/(c*(xLim[1] - xLim[0]))
+        #Check that nt is an integer (accounting for the fact python will store as float)
+        if not np.isclose(nt, round(nt)):
+            raise ValueError(f"nt must be an integer, but calculated nt = {nt}") 
+        nt = int(round(nt))
+        print('Courant number =', c)
 
         # Set the initial conditions for all schemes
-        phi0 = init(x)
+        phi0 = init(x, L)
         # Compute analytic solution at endtime
-        phiA = init((x - u*endTime)%(xLim[1] - xLim[0])) 
+        phiA = init((x - u*endTime)%(xLim[1] - xLim[0]), L) 
 
         #Loop over schemes and store errors
         for i in range(len(schemes)):
@@ -60,7 +68,7 @@ def resolutionErrors(init, schemes, outFile,
             # Loop through all time steps
             for t in range(nt):
                 # Update phi
-                schemes[i](phiLevels, c_actual)
+                schemes[i](phiLevels, c)
             # Calculate and store the l2 error
             l2errors[n, i] = l2error(phiLevels[-1], phiA)
 
@@ -78,10 +86,9 @@ def resolutionErrors(init, schemes, outFile,
     return None
 
 
-#Schemes used and x-domain
+#Schemes used
 new_schemes = [FTBS, CTCS, Semi_Lagrange]
-xLim = [0,1]
 
 #Run script
-resolutionErrors(lambda x: sinwave(x, xLim[1] - xLim[0]), new_schemes, "newSchemesSinResolutionErrors.pdf",
-                       nx = (np.arange(40, 400, 10)), u = 1, c = 0.5, endTime = 1.0, xLim=xLim)
+resolutionErrors(lambda x, L: sinwave(x, L), new_schemes, "newSchemesSinResolutionErrorsnew.pdf",
+                       nx = (np.arange(40, 400, 10)))
