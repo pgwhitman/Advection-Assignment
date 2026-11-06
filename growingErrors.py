@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from advectionHelpers import cosBell_0_05, cosBell, square_wave, l2error
-from schemes import FTBS, CTCS, FTCS, semi_lagrange
+from schemes import FTBS, CTCS, FTCS, Semi_Lagrange
 
 # First make sure that the plots folder exists
 if not os.path.exists("plots"):
@@ -76,16 +76,7 @@ def growingErrors(init, schemes, outFile,
     plt.ylabel(r'$\ell_2$ error', fontsize=13)
     plt.savefig("plots/"+outFile)
 
-schemes = [FTBS, CTCS, semi_lagrange]
+schemes = [FTBS, CTCS, Semi_Lagrange]
 
 # growingErrors(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "basicSchemesCosErrors.pdf",
 #               nx = 40, nt = 100, u = 1, endTime = 1)
-
-# growingErrors(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "basicSchemesSquareErrors.pdf",
-#               nx = 40, nt = 100, u = 1, endTime = 1)
-
-growingErrors(lambda x: cosBell(x, a=0.1, b=0.5), schemes, "newSchemesCosErrors.pdf",
-              nx = 40, nt = 100, u = 2.8, endTime = 1)
-
-growingErrors(lambda x: square_wave(x, a=0.1, b=0.5), schemes, "newSchemesSquareErrors.pdf",
-              nx = 40, nt = 100, u = 2.8, endTime = 1)

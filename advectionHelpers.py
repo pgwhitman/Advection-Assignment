@@ -40,7 +40,7 @@ def square_wave(x, a, b):
         a (float): The start of the square wave
         b (float): The end of the square wave
     Returns:
-        phi : 1darray. A square wave between x=a and x=b
+        phi (1darray): A square wave between x=a and x=b
     '''
     return np.where((x > a) & (x < b), 1, 0.)
 
