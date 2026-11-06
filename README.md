@@ -1,4 +1,4 @@
-Advection assignment. Hilary Weller <h.weller@reading.ac.uk>
+Advection assignment. Hilary Weller <h.weller@reading.ac.uk> and Patrick Whitman <p.g.whitman@pgr.reading.ac.uk>
 Code to solve the advection equation.
 
 
